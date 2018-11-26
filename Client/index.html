@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script>var socketExample = new WebSocket("ws://127.0.0.1/chat?pseudo=toto");
+    <script>
+
+        var socketExample = new WebSocket("ws://127.0.0.1:8080/chat?pseudo=toto");
     console.log(socketExample);
-    socketExample.onmessage = function(event){
-        console.log(event.data);
-    }
+
+    socketExample.onopen = function(event) {
+        console.log("WebSocket message received:", event);
+    };
+        /*wss.addEventListener('open',Function(event)){
+        console.log('toto');
+        }*/
     </script>
 </head>
 <body>
