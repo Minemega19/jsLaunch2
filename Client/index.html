@@ -12,11 +12,17 @@
 <body>
  <P id="affPseudo"></P>
  <div class="row no-gutters">
-     <div class="col-12 col-sm-6 col-md-8 bg-light">
+     <div class="col-12 col-sm-6 col-md-8 bg-light" >
          Messages
+         <div id="contenu">
+
+         </div>
      </div>
      <div class="col-6 col-md-4 bg-info">
          Liste des utilisateurs connectés
+         <div id="userOnline">
+
+         </div>
      </div>
  </div>
  <nav class="navbar fixed-bottom navbar-expand-lg navbar-dark bg-dark">
@@ -26,8 +32,8 @@
      </button>
 
      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-         <input class="form-control mr-sm-2" type="search" placeholder="Message" aria-label="Search">
-         <button type="button" class="btn btn-light">Entrer</button>
+         <input class="form-control mr-sm-2" type="search" placeholder="Message" id = "chatbody" aria-label="Search">
+         <button type="button" class="btn btn-light" onclick="envoyerMessage()" >Entrer</button>
      </div>
  </nav>
 </body>
@@ -45,9 +51,16 @@
             "Bonjour : " + person + " vous allez entrer dans un salon de chat.";
     }
     console.log("Nom de la personne log : " + person + " vous allez entrer dans un salon de chat.");
-    /*wss.addEventListener('open',Function(event)){
-    console.log('toto');
-    }*/
+
+    document.getElementById("userOnline").innerHTML += person;
+    document.getElementById("userOnline").innerHTML += "<br>";
+
+    function envoyerMessage() {
+        document.getElementById("contenu").innerHTML += person + " : "+ document.getElementById("chatbody").value;
+        document.getElementById("contenu").innerHTML += "<br>";
+
+    }
+
 </script>
 
 </html>
