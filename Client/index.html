@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
 </head>
 <body>
@@ -37,14 +35,11 @@
      </div>
  </nav>
 </body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script>
-
-    var socketExample = new WebSocket("ws://127.0.0.1:8080/chat?pseudo=toto");
-    console.log(socketExample);
-
-    socketExample.onopen = function(event) {
-        console.log("WebSocket message received:", event);
-    };
+    $(document).ready(function(){});
     var person = prompt("Pseudo : ", "");
     if (person != null) {
         document.getElementById("affPseudo").innerHTML =
@@ -52,15 +47,42 @@
     }
     console.log("Nom de la personne log : " + person + " vous allez entrer dans un salon de chat.");
 
+
     document.getElementById("userOnline").innerHTML += person;
     document.getElementById("userOnline").innerHTML += "<br>";
+    var urlConnexion = "ws://127.0.0.1:8080/chat?pseudo="+person;
+    //alert("ws://127.0.0.1:8080/chat?pseudo="+person);
+    var socketCHAT = new WebSocket(urlConnexion);
+    console.log(socketCHAT);
+
+    socketCHAT.onopen = function(event) {
+        console.log("Les messages sont reçu correctement", event);
+    };
+    var lastMessage;
 
     function envoyerMessage() {
-        document.getElementById("contenu").innerHTML += person + " : "+ document.getElementById("chatbody").value;
-        document.getElementById("contenu").innerHTML += "<br>";
+        lastMessage = document.getElementById("chatbody").value;
+        // document.getElementById("contenu").innerHTML += person + " : "+ document.getElementById("chatbody").value;
+        // document.getElementById("contenu").innerHTML += "<br>";
+        document.getElementById("chatbody").value = ""; //Reset du message
+        recupererMessage();
+        return false;
+    }
+    function recupererMessage(){
+        socketCHAT.send(lastMessage);
+        console.log("Message reçu");
 
+    }
+    socketCHAT.onmessage = function(event) {
+        console.log("Message:", event.data);
+        onMessageListener(event.data);
+    };
+
+    let onMessageListener = function(lastmessage){
+        dernierMessage = JSON.parse(lastmessage);
+        var dt = new Date();
+        $("#contenu").append( "<p>"+dt.getHours() + "h"+ dt.getMinutes() + "  "+"<b>"+ dernierMessage.emetteur + "</b>"+" : "+ dernierMessage.texte + "</p>");
     }
 
 </script>
-
 </html>
