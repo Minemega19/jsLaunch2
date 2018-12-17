@@ -46,10 +46,6 @@
             "Bonjour : " + person + " vous allez entrer dans un salon de chat.";
     }
     console.log("Nom de la personne log : " + person + " vous allez entrer dans un salon de chat.");
-
-
-    document.getElementById("userOnline").innerHTML += person;
-    document.getElementById("userOnline").innerHTML += "<br>";
     var urlConnexion = "ws://127.0.0.1:8080/chat?pseudo="+person;
     //alert("ws://127.0.0.1:8080/chat?pseudo="+person);
     var socketCHAT = new WebSocket(urlConnexion);
@@ -62,8 +58,6 @@
 
     function envoyerMessage() {
         lastMessage = document.getElementById("chatbody").value;
-        // document.getElementById("contenu").innerHTML += person + " : "+ document.getElementById("chatbody").value;
-        // document.getElementById("contenu").innerHTML += "<br>";
         document.getElementById("chatbody").value = ""; //Reset du message
         recupererMessage();
         return false;
@@ -80,8 +74,11 @@
 
     let onMessageListener = function(lastmessage){
         dernierMessage = JSON.parse(lastmessage);
-        var dt = new Date();
-        $("#contenu").append( "<p>"+dt.getHours() + "h"+ dt.getMinutes() + "  "+"<b>"+ dernierMessage.emetteur + "</b>"+" : "+ dernierMessage.texte + "</p>");
+
+        if(dernierMessage.type != 'users'){
+            var dt = new Date();
+            $("#contenu").append( "<p>"+dt.getHours() + "h"+ dt.getMinutes() + "  "+"<b>"+ dernierMessage.emetteur + "</b>"+" : "+ dernierMessage.texte + "</p>");
+        }
     }
 
 </script>
